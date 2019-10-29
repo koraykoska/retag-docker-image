@@ -1,4 +1,4 @@
-FROM docker:19.03.2 as runtime
+FROM docker:19.03.4
 
 LABEL "version"="0.1.0"
 LABEL "repository"="https://github.com/Ybrin/retag-docker-image"
