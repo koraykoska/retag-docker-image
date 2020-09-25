@@ -1,6 +1,6 @@
 FROM docker:19.03.4
 
-LABEL "version"="0.1.0"
+LABEL "version"="0.1.2"
 LABEL "repository"="https://github.com/Ybrin/retag-docker-image"
 LABEL "homepage"="https://github.com/Ybrin/retag-docker-image"
 LABEL "maintainer"="Koray Koska <koray@koska.at>"

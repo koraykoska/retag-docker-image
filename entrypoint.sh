@@ -1,25 +1,48 @@
 #!/bin/sh
 set -e
 
-function main() {
-    echo "Retagging and Pushing to Docker registry..."
+log() {
+  echo "> ${*}"
+  eval "$@"
+}
 
-    #sanitize "${INPUT_NAME}" "name"
-    #sanitize "${INPUT_USERNAME}" "username"
-    #sanitize "${INPUT_PASSWORD}" "password"
+# parse the variables that are passed in the input params
+parseArg() {
+  eval "echo ${1:-$2}"
+}
 
-    # docker login
-    echo ${INPUT_PASSWORD} | docker login -u ${INPUT_USERNAME} --password-stdin ${INPUT_REGISTRY}
+main() {
+    echo "Re-tagging and Pushing to Docker registry..."
 
-    #REGISTRY_NO_PROTOCOL=$(echo "${INPUT_REGISTRY}" | sed -e 's/^https:\/\///g')
-    OLD_DOCKER_NAME="${INPUT_NAME}:${INPUT_OLD_TAG}"
-    NEW_DOCKER_NAME="${INPUT_NAME}:${INPUT_NEW_TAG}"
+    # pull variables from "with" but default back to "env"
+    # this would allow jobs may be set up with less lines in steps
+    INPUT_REGISTRY=$(parseArg "$INPUT_REGISTRY" "$DOCKER_REGISTRY")
+    INPUT_USERNAME=$(parseArg "$INPUT_USERNAME" "$DOCKER_USERNAME")
+    INPUT_PASSWORD=$(parseArg "$INPUT_PASSWORD" "$DOCKER_PASSWORD")
 
-    # tag and push
-    docker tag ${OLD_DOCKER_NAME} ${NEW_DOCKER_NAME}
-    docker push ${NEW_DOCKER_NAME}
+    # login to registry if supplied
+    if [ -n "${INPUT_REGISTRY}" ]; then
+      echo "Logging into: ${INPUT_REGISTRY}"
+      echo "${INPUT_PASSWORD}" | docker login -u "${INPUT_USERNAME}" --password-stdin "${INPUT_REGISTRY}"
+    fi
+
+    INPUT_IMAGE=$(parseArg "$INPUT_IMAGE" "$DOCKER_IMAGE")
+    INPUT_OLD_TAG=$(parseArg "$INPUT_OLD_TAG" "$DOCKER_OLD_TAG")
+    INPUT_NEW_TAG=$(parseArg "$INPUT_NEW_TAG" "$DOCKER_NEW_TAG")
+
+    # pull -> tag -> push
+    OLD_IMAGE="${INPUT_IMAGE}:${INPUT_OLD_TAG}"
+    NEW_IMAGE="${INPUT_IMAGE}:${INPUT_NEW_TAG}"
+
+    log docker pull "${OLD_IMAGE}"
+    log docker tag "${OLD_IMAGE}" "${NEW_IMAGE}"
+    log docker push "${NEW_IMAGE}"
 
     # logout
-    docker logout
+    if [ -n "${INPUT_REGISTRY}" ]; then
+      echo "Logging out from Registry"
+      docker logout
+    fi
 }
+
 main

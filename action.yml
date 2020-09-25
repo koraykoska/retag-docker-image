@@ -1,29 +1,33 @@
-name: 'Retag Docker Image'
+name: 'Re-tag Docker Image'
 author: 'Koray Koska'
 branding:
   icon: 'message-square'
   color: 'gray-dark'
-description: 'Retag a Docker Image and push it to the registry'
+
+description: 'Re-tag a Docker Image and push it to the registry'
+
 inputs:
   registry:
     description: 'The registry to push the new tag later'
-    required: true
+    required: false
   name:
-    description: 'The name of the image you would like to retag'
-    required: true
+    description: 'The name of the image you would like to re-tag'
+    required: false
   old_tag:
-    description: 'The old tag of the image you would like to retag'
-    required: true
+    description: 'The old tag of the image you would like to re-tag'
+    required: false
   new_tag:
-    description: 'The new tag of the image you would like to retag'
-    required: true
+    description: 'The new tag of the image you would like to ret-ag'
+    required: false
   username:
     description: 'The login username for the registry'
-    required: true
+    required: false
   password:
     description: 'The login password for the registry'
-    required: true
-outputs:
+    required: false
+
+outputs: {}
+
 runs:
   using: 'docker'
   image: 'Dockerfile'
