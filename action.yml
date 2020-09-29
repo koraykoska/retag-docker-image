@@ -1,29 +1,55 @@
-name: 'Retag Docker Image'
+name: 'Re-tag Docker Image'
+
 author: 'Koray Koska'
+
 branding:
   icon: 'message-square'
   color: 'gray-dark'
-description: 'Retag a Docker Image and push it to the registry'
-inputs:
-  registry:
-    description: 'The registry to push the new tag later'
-    required: true
-  name:
-    description: 'The name of the image you would like to retag'
-    required: true
-  old_tag:
-    description: 'The old tag of the image you would like to retag'
-    required: true
-  new_tag:
-    description: 'The new tag of the image you would like to retag'
-    required: true
-  username:
-    description: 'The login username for the registry'
-    required: true
-  password:
-    description: 'The login password for the registry'
-    required: true
-outputs:
+
 runs:
   using: 'docker'
   image: 'Dockerfile'
+
+description: >
+  Re-Tag docker images from existing sources and push them back to a registry
+
+outputs: {}
+
+inputs:
+
+  # Registry settings
+  registry:
+    description: 'The registry to push the new tag later'
+    required: false
+
+  username:
+    description: 'The login username for the registry'
+    #default: ${{ github.repository_owner }}
+    required: false
+
+  password:
+    description: 'The login password for the registry'
+    #default: ${{ secrets.GITHUB_TOKEN }}
+    required: false
+
+  # Source image
+  name:
+    description: 'The name of the image you would like to re-tag'
+    default: $DOCKER_IMAGE
+    required: true
+
+  tag:
+    description: 'The old tag of the image you would like to re-tag'
+    default: ${DOCKER_TAG:-latest}
+    required: true
+
+  # Target images
+  new_name:
+    description: 'New name of the image'
+    default: $DOCKER_NEW_IMAGE
+    required: false
+
+  new_tag:
+    description: 'The new tag of the image you would like to ret-ag'
+    default: $DOCKER_NEW_TAG
+    required: true
