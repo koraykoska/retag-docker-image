@@ -1,0 +1,79 @@
+name: "Test Usage"
+on: push
+env:
+  CI: true
+
+jobs:
+
+  test-basic-usage:
+    name: "Re-Tag 'with'"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: "Re-Tag"
+        uses: ./
+        with:
+          registry: docker.pkg.github.com/${{ github.repository }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          name: busybox
+          new_name: docker.pkg.github.com/${{ github.repository }}/test-usage
+          tag: latest
+          new_tag: retag-basic
+
+
+  test-basic-with-default-tag:
+    name: "Re-Tag 'with' and default (:latest) tag"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: "Re-Tag"
+        uses: ./
+        with:
+          registry: docker.pkg.github.com/${{ github.repository }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          name: busybox
+          new_name: docker.pkg.github.com/${{ github.repository }}/test-usage
+          new_tag: retag-basic-latest
+
+
+  test-alternative-usage:
+    name: "Re-Tag 'env'"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: "Re-Tag"
+        uses: ./
+        env:
+          DOCKER_REGISTRY: docker.pkg.github.com/${{ github.repository }}
+          DOCKER_USERNAME: ${{ github.repository_owner }}
+          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_IMAGE: busybox
+          DOCKER_NEW_IMAGE: docker.pkg.github.com/${{ github.repository }}/test-usage
+          DOCKER_TAG: latest
+          DOCKER_NEW_TAG: retag-alt
+
+
+  test-alternative-with-default-tag:
+    name: "Re-Tag 'env' and default (:latest) tag"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: "Re-Tag"
+        uses: ./
+        env:
+          DOCKER_REGISTRY: docker.pkg.github.com/${{ github.repository }}
+          DOCKER_USERNAME: ${{ github.repository_owner }}
+          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_IMAGE: busybox
+          DOCKER_NEW_IMAGE: docker.pkg.github.com/${{ github.repository }}/test-usage
+          DOCKER_NEW_TAG: retag-alt-latest

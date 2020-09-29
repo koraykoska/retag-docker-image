@@ -12,7 +12,7 @@ tag or any major shorthands with an existing image.
   uses: ybrin/retag-docker-image@0.1.0
   with:
     name: my-awesome-docker-image/my-package
-    old_tag: ${{ github.sha }}
+    tag: ${{ github.sha }}
     new_tag: latest
 ```
 
@@ -26,7 +26,7 @@ tag or any major shorthands with an existing image.
     username: ${{ github.repository_owner }}
     password: ${{ secrets.GITHUB_TOKEN }}
     name: my-awesome-docker-image/my-package
-    old_tag: ${{ github.sha }}
+    tag: ${{ github.sha }}
     new_tag: latest
 ```
 
@@ -39,12 +39,13 @@ env:
   DOCKER_USERNAME: ${{ github.repository_owner }}
   DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
   DOCKER_IMAGE: my-awesome-docker-image/my-package
-  DOCKER_OLD_TAG: ${{ github.sha }}
+  DOCKER_TAG: ${{ github.sha }}
 
-- name: Retag to latest
-  uses: ybrin/retag-docker-image@0.1.0
-  with:
-    new_tag: latest
+steps:
+  - name: Retag to latest
+    uses: ybrin/retag-docker-image@0.1.0
+    with:
+      new_tag: latest
 ```
 
 # Parameters
@@ -55,5 +56,6 @@ env:
 | `username`        | `DOCKER_USERNAME`    | `yes` when `registry` is used    |
 | `password`        | `DOCKER_PASSWORD`    | `yes` when `registry` is used    |
 | `name`            | `DOCKER_IMAGE`       | `yes`                            |
-| `old_tag`         | `DOCKER_OLD_TAG`     | `yes`                            |
+| `new_name`        | `DOCKER_NEW_IMAGE`   | `no` defaults to `name`          |
+| `tag`             | `DOCKERTAG`          | `yes`                            |
 | `new_tag`         | `DOCKER_NEW_TAG`     | `yes`                            |
