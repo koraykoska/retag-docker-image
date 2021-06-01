@@ -8,6 +8,9 @@ inputs:
   registry:
     description: 'The registry to push the new tag later'
     required: true
+  login:
+    description: 'Whether to login first'
+    required: false
   name:
     description: 'The name of the image you would like to retag'
     required: true
@@ -19,11 +22,10 @@ inputs:
     required: true
   username:
     description: 'The login username for the registry'
-    required: true
+    required: false
   password:
     description: 'The login password for the registry'
-    required: true
-outputs:
+    required: false
 runs:
   using: 'docker'
   image: 'Dockerfile'
