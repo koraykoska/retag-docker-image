@@ -8,7 +8,7 @@ Retagging a Github sha tag to latest.
 
 ```yaml
 - name: Retag to latest
-  uses: ybrin/retag-docker-image@0.1.0
+  uses: koraykoska/retag-docker-image@0.2.0
   with:
     registry: some.registry.com
     name: my-awesome-docker-image/my-package

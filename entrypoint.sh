@@ -8,10 +8,16 @@ function main() {
     sanitize "${INPUT_USERNAME}" "username"
     sanitize "${INPUT_PASSWORD}" "password"
 
-    # docker login
-    echo ${INPUT_PASSWORD} | docker login -u ${INPUT_USERNAME} --password-stdin docker.pkg.github.com
-
+    # Registry without the https in front
     REGISTRY_NO_PROTOCOL=$(echo "${INPUT_REGISTRY}" | sed -e 's/^https:\/\///g')
+
+    if [ -z ${INPUT_LOGIN+x} ]; then
+        echo "Skipping docker login";
+    else
+        # docker login
+        echo ${INPUT_PASSWORD} | docker login -u ${INPUT_USERNAME} --password-stdin ${REGISTRY_NO_PROTOCOL};
+    fi
+
     OLD_DOCKER_NAME="${REGISTRY_NO_PROTOCOL}/${INPUT_NAME}:${INPUT_OLD_TAG}"
     NEW_DOCKER_NAME="${REGISTRY_NO_PROTOCOL}/${INPUT_NAME}:${INPUT_NEW_TAG}"
 
@@ -20,5 +26,9 @@ function main() {
     docker push ${NEW_DOCKER_NAME}
 
     # logout
-    docker logout
+    if [ -z ${INPUT_LOGIN+x} ]; then
+        echo "Skipping docker logout";
+    else
+        docker logout;
+    fi
 }
