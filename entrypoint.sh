@@ -11,11 +11,9 @@ function main() {
     # Registry without the https in front
     REGISTRY_NO_PROTOCOL=$(echo "${INPUT_REGISTRY}" | sed -e 's/^https:\/\///g')
 
-    if [ -z ${INPUT_LOGIN+x} ]; then
-        echo "Skipping docker login";
-    else
-        # docker login
-        echo ${INPUT_PASSWORD} | docker login -u ${INPUT_USERNAME} --password-stdin ${REGISTRY_NO_PROTOCOL};
+    # docker login
+    if uses "${INPUT_USERNAME}" && uses "${INPUT_PASSWORD}"; then
+        echo "${INPUT_PASSWORD}" | docker login -u ${INPUT_USERNAME} --password-stdin ${REGISTRY_NO_PROTOCOL}
     fi
 
     OLD_DOCKER_NAME="${REGISTRY_NO_PROTOCOL}/${INPUT_NAME}:${INPUT_OLD_TAG}"
@@ -26,9 +24,7 @@ function main() {
     docker push ${NEW_DOCKER_NAME}
 
     # logout
-    if [ -z ${INPUT_LOGIN+x} ]; then
-        echo "Skipping docker logout";
-    else
+    if uses "${INPUT_USERNAME}" && uses "${INPUT_PASSWORD}"; then
         docker logout;
     fi
 }
