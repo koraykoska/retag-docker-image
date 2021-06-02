@@ -40,3 +40,6 @@ sanitize() {
 uses() {
   [ ! -z "${1}" ]
 }
+
+
+main
