@@ -4,9 +4,10 @@ set -e
 function main() {
     echo ""
 
+    sanitize "${INPUT_REGISTRY}" "registry"
     sanitize "${INPUT_NAME}" "name"
-    sanitize "${INPUT_USERNAME}" "username"
-    sanitize "${INPUT_PASSWORD}" "password"
+    sanitize "${INPUT_OLD_TAG}" "old_tag"
+    sanitize "${INPUT_NEW_TAG}" "new_tag"
 
     # Registry without the https in front
     REGISTRY_NO_PROTOCOL=$(echo "${INPUT_REGISTRY}" | sed -e 's/^https:\/\///g')
@@ -27,4 +28,15 @@ function main() {
     if uses "${INPUT_USERNAME}" && uses "${INPUT_PASSWORD}"; then
         docker logout;
     fi
+}
+
+sanitize() {
+  if [ -z "${1}" ]; then
+    >&2 echo "Unable to find the ${2}. Did you set with.${2}?"
+    exit 1
+  fi
+}
+
+uses() {
+  [ ! -z "${1}" ]
 }
